@@ -31,7 +31,7 @@ void read_user_input(){
     }
 
     memset(buffer, 0, sizeof(buffer)); // clean buffer
-    while ((buffer = read(sock, buffer, sizeof(buffer)-1)) > 0) {
+    while (read(sock, buffer, sizeof(buffer)-1) > 0) {
         size_t buf_len = strlen(buffer);
         buffer[buf_len] = '\0';
         printf("block read: \n<%s>\n", buffer);

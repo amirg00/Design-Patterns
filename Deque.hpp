@@ -20,7 +20,7 @@ typedef struct Deque{
 //========== Methods ==========/
 //*****************************/
 Deque* createQ();
-void enQ(Deque* queue, const void* data);
+void enQ(Deque* queue, void* data);
 void* DEQUEUE_TAIL(Deque* queue);  /*Original dequeue head*/
 void* deQ(Deque* queue);           /*Dequeue head*/
 bool isEmpty(Deque* stack);

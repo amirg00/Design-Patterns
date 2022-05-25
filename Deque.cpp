@@ -21,14 +21,14 @@ pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 }
 
 // Enqueues to the head of the queue.
-void enQ(Deque* queue, const void* data){
+void enQ(Deque* queue, void* data){
     pthread_mutex_lock(&lock);
     deque_node_ptr n = (deque_node_ptr)malloc(sizeof(deque_node));
     if (!n){
         pthread_mutex_unlock(&lock);
         return;
     }
-    strcpy(n->data, data);
+    n->data = data;
 
     if(!queue->size){ /*Queue is empty*/
         n->next = NULL;
@@ -57,7 +57,7 @@ void* deQ(Deque* queue){
     }
     printf("Queue Size: %d\n", size(queue));
     deque_node_ptr head_prev = queue->head->prev;
-    char* rm_node_str = queue->head->data;
+    void* rm_node_str = queue->head->data;
 
     //printf("Queue Size: %s\n", head_prev->data);
     free(queue->head); // free dequeued resource
@@ -75,7 +75,7 @@ void* DEQUEUE_TAIL(Deque* queue){
         pthread_cond_wait(&cond, &lock);
     }
     deque_node_ptr rm_node = queue->tail;
-    char* rm_node_str = rm_node->data;
+    void* rm_node_str = rm_node->data;
     deque_node_ptr tail_next = queue->tail->next;
     if (tail_next) {tail_next->prev = NULL;}
     else{queue->head = NULL;}

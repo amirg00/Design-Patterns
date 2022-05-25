@@ -24,6 +24,7 @@ private:
     static pthread_mutex_t lock;
 
 protected:
-    singleton() : pthread_mutex_init(&lock, NULL){
+    singleton(){
+        //pthread_mutex_init(&lock, NULL);
     }
 };

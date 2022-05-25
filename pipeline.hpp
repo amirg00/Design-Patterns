@@ -1,9 +1,15 @@
 #include "Object_active.hpp"
+#include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <sys/wait.h>
 #include <ctype.h>
 
 #define ALPHABETIC_AMOUNT 26        /*Alphabetic chars amount*/
 #define HIST 1                      /*Hist amount for the cipher: the amount of the shift*/
-#define PORT "3490"                 /*The port which first AO will be connecting to*/
+#define PORT 3490                   /*The port which first AO will be connecting to*/
 #define SERVER_IP "127.0.0.1"       /*The server ip is the localhost*/
 #define MAX_DATA_SIZE 4096          /*Max number of bytes we can get at once - buffer size*/
 
