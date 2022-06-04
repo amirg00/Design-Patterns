@@ -14,6 +14,7 @@
 #include <arpa/inet.h>
 #include <sys/wait.h>
 #include <signal.h>
+
 #define PORT "3490"  // the port users will be connecting to
 #define BACKLOG 10   // how many pending connections queue will hold
 pthread_mutex_t lock;
@@ -22,45 +23,43 @@ pthread_mutex_t lock;
  * In this task we were based on tirgul number 6
  */
 
-void sigchld_handler(int s)
-{
+void sigchld_handler(int s) {
     // waitpid() might overwrite errno, so we save and restore it:
     int saved_errno = errno;
 
-    while(waitpid(-1, NULL, WNOHANG) > 0);
+    while (waitpid(-1, NULL, WNOHANG) > 0);
 
     errno = saved_errno;
 }
 
 
 // get sockaddr, IPv4 or IPv6:
-void *get_in_addr(struct sockaddr *sa)
-        {
+void *get_in_addr(struct sockaddr *sa) {
     if (sa->sa_family == AF_INET) {
-        return &(((struct sockaddr_in*)sa)->sin_addr);
+        return &(((struct sockaddr_in *) sa)->sin_addr);
     }
 
-    return &(((struct sockaddr_in6*)sa)->sin6_addr);
-        }
-        //based the code from tirgul 6: mutex.c
-        void* THREAD(void* input){
+    return &(((struct sockaddr_in6 *) sa)->sin6_addr);
+}
+
+//based the code from tirgul 6: mutex.c
+void *THREAD(void *input) {
     pthread_mutex_destroy(&lock);
-    int* current_fd=(int*)input;
-    int new_fd=*current_fd;
+    int *current_fd = (int *) input;
+    int new_fd = *current_fd;
     sleep(10); //to show a connection of several threads and not close quickly
     if (send(new_fd, "Hello, world!", 13, 0) == -1)
         perror("send");
     close(new_fd);
 }
 
-int main(void)
-{
+int main(void) {
     int sockfd, new_fd;  // listen on sock_fd, new connection on new_fd
     struct addrinfo hints, *servinfo, *p;
     struct sockaddr_storage their_addr; // connector's address information
     socklen_t sin_size;
     struct sigaction sa;
-    int yes=1;
+    int yes = 1;
     char s[INET6_ADDRSTRLEN];
     int rv;
     int create_thread;
@@ -76,7 +75,7 @@ int main(void)
     }
 
     // loop through all the results and bind to the first we can
-    for(p = servinfo; p != NULL; p = p->ai_next) {
+    for (p = servinfo; p != NULL; p = p->ai_next) {
         if ((sockfd = socket(p->ai_family, p->ai_socktype,
                              p->ai_protocol)) == -1) {
             perror("server: socket");
@@ -100,7 +99,7 @@ int main(void)
 
     freeaddrinfo(servinfo); // all done with this structure
 
-    if (p == NULL)  {
+    if (p == NULL) {
         fprintf(stderr, "server: failed to bind\n");
         exit(1);
     }
@@ -120,7 +119,7 @@ int main(void)
 
     printf("server: waiting for connections...\n");
 
-    while(1) {  // main accept() loop
+    while (1) {  // main accept() loop
         sin_size = sizeof their_addr;
         new_fd = accept(sockfd, (struct sockaddr *) &their_addr, &sin_size);
         if (new_fd == -1) {
@@ -130,7 +129,7 @@ int main(void)
 
         inet_ntop(their_addr.ss_family,
                   get_in_addr((struct sockaddr *) &their_addr),
-                          s, sizeof s);
+                  s, sizeof s);
         printf("server: got connection from %s\n", s);
         if (pthread_mutex_init(&lock, NULL) != 0) {
             printf("\n mutex init failed\n");
