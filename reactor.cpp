@@ -1,7 +1,7 @@
 #include "reactor.hpp"
 
 void* newReactor(){
-    REACTOR_PTR reactor = (REACTOR) malloc(sizeof(REACTOR));
+    REACTOR_PTR reactor = (REACTOR_PTR) malloc(sizeof(REACTOR));
     reactor.fd_size = 0;
     return reactor;
 }
@@ -14,7 +14,7 @@ void InstallHandler(REACTOR_PTR reactor_ptr, void* (*func_ptr)(void*), int fd){
         reactor_ptr->fd_size++;
 
         // Create rector's thread id
-        if (pthread_create(&reactor->private_thread, NULL, listen_to_fds, reactor) != 0) {
+        if (pthread_create(&reactor_ptr->private_thread, NULL, listen_to_fds, reactor_ptr) != 0) {
             printf("Unable to create thread\n");
         }
         return;
