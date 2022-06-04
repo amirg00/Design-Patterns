@@ -19,7 +19,7 @@ void InstallHandler(REACTOR_PTR reactor_ptr, void* (*func_ptr)(void*), int fd){
         }
         return;
     }
-    /*Fill reactor's fields*/
+    // Search for available place for a new fd handler.
     for (int i = 0; i < FD_NUM; ++i) {
         if(reactor_ptr->fds[i].fd == -1){
             reactor_ptr->fds[i].events = POLLIN; // Report ready to read on incoming connection
