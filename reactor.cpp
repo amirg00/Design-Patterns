@@ -12,7 +12,7 @@ void* newReactor(){
     }
     return reactor;
 }
-void InstallHandler(REACTOR_PTR reactor_ptr, void* (func_ptr)(void*), int fd){
+void InstallHandler(REACTOR_PTR reactor_ptr, void* (*func_ptr)(void*), int fd){
     /*Fill reactor's fields*/
     int curr_fd_size = reactor_ptr->fd_size;
     reactor_ptr->fds[curr_fd_size] = fd;
