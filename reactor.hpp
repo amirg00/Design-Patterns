@@ -4,10 +4,11 @@
 
 #define F_NUM 50
 #define FD_NUM 100
+#define MAX_DATA 1024
 
 typedef struct Reactor{
-    void* (func_ptr)(void*)[F_NUM];
-    int fds[FD_NUM];
+    void* (func_ptr[F_NUM])(void*);
+    struct pollfd fds[FD_NUM];
     int fd_size;
     pthread_t private_thread;
 }REACTOR, *REACTOR_PTR;

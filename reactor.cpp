@@ -27,17 +27,21 @@ void RemoveHandler(REACTOR_PTR reactor_ptr){
 }
 
 void listen_to_fds(REACTOR_PTR reactor_ptr){
-    struct pollfd *pfds = malloc(sizeof *pfds * reactor_ptr->fd_size);
     for(;;){
         int poll_counter = poll(reactor_ptr->fds, FD_NUM, -1);
         if (poll_count == -1) {
-            perror("poll\n");
+            perror("Poll error!\n");
             exit(1);
         }
+        // Goes over all fds check who changed,
+        // then sends read data from the socket.
         for (int fd = 0; fd < reactor_ptr->fd_size; i++){
-            if(/*fd changed*/){
+            if(reactor_ptr->fds[fd].revents && POLLIN){
                 // read input and send it to the corresponding function.
-
+                char buffer[MAX_DATA];
+                int rc = read(sock, buffer, sizeof(buffer));
+                if (rc <= 0) perror("Error reading!\n");
+                reactor_ptr->func_ptr[fd](buffer);
             }
         }
 
