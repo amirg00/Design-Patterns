@@ -19,16 +19,12 @@ void InstallHandler(REACTOR_PTR reactor_ptr, void* (*func_ptr)(void*), int fd){
         }
         return;
     }
-    // Search for available place for a new fd handler.
-    for (int i = 0; i < FD_NUM; ++i) {
-        if(reactor_ptr->fds[i].fd == -1){
-            reactor_ptr->fds[i].events = POLLIN; // Report ready to read on incoming connection
-            reactor_ptr->fds[i].fd = fd;
-            reactor_ptr->func_ptr[i] = func_ptr;
-            reactor_ptr->fd_size++;
-            return;
-        }
-    }
+    // Add a new fd handler in the end of the fds array.
+    int curr_fd_size = reactor_ptr->fd_size;
+    reactor_ptr->fds[curr_fd_size].events = POLLIN; // Report ready to read on incoming connection
+    reactor_ptr->fds[curr_fd_size] = fd;
+    reactor_ptr->func_ptr[curr_fd_size] = func_ptr;
+    reactor_ptr->fd_size++;
 }
 
 void RemoveHandler(REACTOR_PTR reactor_ptr, int fd){
