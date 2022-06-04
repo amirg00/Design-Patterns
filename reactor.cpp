@@ -40,7 +40,8 @@ void RemoveHandler(REACTOR_PTR reactor_ptr, int fd){
 
 }
 
-void listen_to_fds(REACTOR_PTR reactor_ptr){
+void listen_to_fds(void* reactor_ptr_input){
+    REACTOR_PTR reactor_ptr = (REACTOR_PTR) reactor_ptr_input;
     for(;;){
         int poll_counter = poll(reactor_ptr->fds, FD_NUM, -1);
         if (poll_count == -1) {

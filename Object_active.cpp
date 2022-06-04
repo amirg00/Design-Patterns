@@ -22,7 +22,8 @@ void destroyAO(AO_ptr AO){
     free(AO);
 }
 
-void eventExecute(AO_ptr AO){
+void eventExecute(void* AO_input){
+    AO_ptr AO = (AO_ptr) AO_input;
     for(;;){
         if (isEmpty(AO->queue)){ // Queue is empty: execute end_threat function
             end_treat();
