@@ -16,4 +16,4 @@ typedef struct Reactor{
 void* newReactor();
 void InstallHandler(REACTOR_PTR, void* (*func_ptr)(void*), int fd);
 void RemoveHandler(REACTOR_PTR reactor_ptr);
-void listen_to_fds(REACTOR_PTR reactor);
+void listen_to_fds(REACTOR_PTR reactor_ptr);
