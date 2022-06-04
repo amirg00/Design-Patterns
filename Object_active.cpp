@@ -1,10 +1,6 @@
 #include "Object_active.hpp"
 
-AO_ptr newAO(Deque* queue, void (*treat)(void*), void (*end_treat)()){
-    AO_ptr newAO = (AO_ptr) (malloc(sizeof(AO)));
-    newAO->queue = queue;
-    newAO->treat = treat;
-    newAO->end_treat = end_treat;
+void newAO(Deque* queue, void (*treat)(void*), void (*end_treat)()){
 
     // Traverse elements without remove from queue
     deque_node_ptr curr = queue->head;
@@ -13,7 +9,6 @@ AO_ptr newAO(Deque* queue, void (*treat)(void*), void (*end_treat)()){
         curr = curr->next;
     }
     end_treat();
-    return newAO;
 }
 void destroyAO(AO_ptr AO){
     destoryQ(AO->queue);

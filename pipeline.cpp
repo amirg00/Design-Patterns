@@ -7,10 +7,26 @@ _PIPE_PTR create_pipe(){
 
 // Reads user's input from given socket of the server side.
 void read_user_input(){
+    AO_ptr in_ptr;
     char buffer[MAX_DATA_SIZE];
     int sock, conn_res;
     struct sockaddr_in server_addr;
 
+    /**********************************/
+    /*         CREATE DEQUE           */
+    /**********************************/
+    in_ptr = (AO_ptr) malloc(sizeof(AO));
+    if (!in_ptr){return;}
+
+    /**********************************/
+    /*         SET AO FIELDS          */
+    /**********************************/
+    in_ptr->queue = createQ();
+
+
+    /**********************************/
+    /*         CREATE SOCKET          */
+    /**********************************/
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
         perror("Error in socket");
@@ -18,24 +34,36 @@ void read_user_input(){
     }
     printf("Server socket created successfully.\n");
 
-    // creates the new connection
+    /**********************************/
+    /*     CREATES NEW CONNECTION     */
+    /**********************************/
     bzero(&server_addr, sizeof(server_addr));
     server_addr.sin_family      = AF_INET;
     server_addr.sin_port        = PORT;
     server_addr.sin_addr.s_addr = inet_addr(SERVER_IP);
 
+    /**********************************/
+    /*       CONNECTS TO SERVER       */
+    /**********************************/
     conn_res = connect(sock, (struct sockaddr *) &server_addr, sizeof(server_addr));
     if (conn_res == -1) {
         perror("Error in socket");
         exit(1);
     }
 
-    memset(buffer, 0, sizeof(buffer)); // clean buffer
-    while (read(sock, buffer, sizeof(buffer)-1) > 0) {
-        size_t buf_len = strlen(buffer);
-        buffer[buf_len] = '\0';
-        printf("block read: \n<%s>\n", buffer);
+    /**********************************/
+    /*    READ STRINGS FROM SERVER    */
+    /**********************************/
+    for(;;){
+        memset(buffer, 0, sizeof(buffer)); // clean buffer
+        while (read(sock, buffer, sizeof(buffer)-1) > 0) {
+            size_t buf_len = strlen(buffer);
+            buffer[buf_len] = '\0';
+            printf("block read: \n<%s>\n", buffer);
+        }
+        enQ(in_ptr->queue, buffer);
     }
+
 
 }
 
