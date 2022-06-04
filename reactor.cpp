@@ -3,8 +3,6 @@
 void* newReactor(){
     REACTOR_PTR reactor = (REACTOR) malloc(sizeof(REACTOR));
     reactor.fd_size = 0;
-    memset(reactor.fds, -1, sizeof(reactor.fds));
-    memset(reactor->func_ptr, 0, sizeof(reactor.func_ptr));
     return reactor;
 }
 void InstallHandler(REACTOR_PTR reactor_ptr, void* (*func_ptr)(void*), int fd){
