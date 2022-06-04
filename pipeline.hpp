@@ -25,3 +25,4 @@ _PIPE_PTR create_pipe();
 void read_user_input();
 void caesar_cipher(char* user_in);
 void alter_chars(char* user_in);
+void destroyPipe(_PIPE_PTR pipeline);

@@ -63,8 +63,6 @@ void read_user_input(){
         }
         enQ(in_ptr->queue, buffer);
     }
-
-
 }
 
 // Method ciphers a given string input with the constant hist in header file.
@@ -100,4 +98,13 @@ void alter_chars(char* user_in){
             user_in[i] = (char) tolower(currChar);
         }
     }
+}
+
+// Function destroys the pipeline.
+void destroyPipe(_PIPE_PTR pipeline){
+    destroyAO(pipeline->first_AO);
+    destroyAO(pipeline->second_AO);
+    destroyAO(pipeline->third_AO);
+    destroyAO(pipeline->forth_AO);
+    free(pipeline);
 }
