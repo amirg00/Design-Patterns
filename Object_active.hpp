@@ -12,3 +12,4 @@ typedef struct ObjectActive{
 //*****************************/
 AO_ptr newAO(Deque* queue, void (*threat)(void*), void (*end_threat)());
 void destroyAO(AO_ptr AO);
+void eventExecute(AO_ptr AO);
