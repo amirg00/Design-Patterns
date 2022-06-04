@@ -2,7 +2,8 @@
 
 
 _PIPE_PTR create_pipe(){
-    return NULL;
+    _PIPE_PTR pipe = (_PIPE_PTR) malloc(sizeof(_PIPE));
+    return pipe;
 }
 
 // Reads user's input from given socket of the server side.
