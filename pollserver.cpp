@@ -133,7 +133,7 @@ void handle_recv(void* fd){
             if(dest_fd == -1) {continue;}
 
             // Except the listener and ourselves
-            if (reactorPtr->func_ptr[j] != handle_recv && dest_fd != regular_client) {
+            if (reactorPtr->func_ptr[j] != handle_new_connection && dest_fd != regular_client) {
                 if (send(dest_fd, buf, nbytes, 0) == -1) {
                     perror("send");
                 }
