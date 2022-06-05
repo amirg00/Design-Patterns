@@ -1,26 +1,23 @@
 #!make -f
 CC = gcc # c compiler for the run
 CC_FLAGS= -Wall -g
-CXX=g++ # cpp compiler for the run
+CXX=clang++-9 # cpp compiler for the run
 CXX_FLAGS=-std=c++2a
 LD_FLAGS = -shared   # linking flags
 THREAD_FLAGS = -fPIC -pthread
 RM = rm -f   # rm command
 TARGET_LIB = design_pattern_lib.so  # target lib - shared (dynamic) library
 
-SOURCES = Deque.c guard.cpp Object_active.c pipeline.c reactor.c singleton.cpp  # source files
-OBJS=$(subst .cpp .c, .o, $(SOURCES))
 LIB_OBJECTS = Deque.o guard.o Object_active.o pipeline.o reactor.o singleton.o  # library's files
 
 
 .PHONY: all
-all: $(TARGET_LIB) testSingleton testGuard
+all: design_pattern testSingleton pollserver pollclient server client testGuard
 
 design_pattern_lib.so: $(LIB_OBJECTS)
-	$(CC) ${LD_FLAGS} -o $(TARGET_LIB) $(LIBOBJECTS) ${THREAD_FLAGS}
+	$(CC) ${LD_FLAGS} -o $(TARGET_LIB) $(LIBOBJECTS) ${THREAD_FLAGS} -lm
 
-%.o: %.cpp
-	$(CXX) $(CXX_FLAGS) --compile $< -o $@
+design_pattern: design_pattern_lib.so
 
 # C files linking
 Deque.o: Deque.c Deque.h
@@ -40,15 +37,29 @@ singleton.o: singleton.cpp singleton.hpp
 	$(CXX) $(CXX_FLAGS) -c singleton.cpp
 
 guard.o: guard.cpp guard.hpp
-	$(CXX) $(CXX_FLAGS) -c guard.cpp
-
+	$(CXX) $(CXX_FLAGS) -c guard.cpp -pthread
 
 testSingleton: singleton_app_test.cpp $(TARGET_LIB)
-		$(CXX) $(CXX_FLAGS) -o testSingleton singleton_app_test.cpp ./$(TARGET_LIB) -lm
+		$(CXX) $(CXX_FLAGS) -o testSingleton singleton_app_test.cpp ./$(TARGET_LIB) $(THREAD_FLAGS) -lm
 
 testGuard: guard_app_test.cpp $(TARGET_LIB)
-		$(CXX) $(CXX_FLAGS) -o testGuard guard_app_test.cpp ./$(TARGET_LIB) -lm
+		$(CXX) $(CXX_FLAGS) -o testGuard guard_app_test.cpp ./$(TARGET_LIB) $(THREAD_FLAGS) -lm
+
+main1.o: main1.cpp $(TARGET_LIB)
+	$(CXX) $(CC_FLAGS) -c main1.cpp
+
+pollserver.o: pollserver.c $(TARGET_LIB)
+		$(CC) $(CC_FLAGS) -o pollserver.c ./$(TARGET_LIB) $(THREAD_FLAGS) -lm
+
+pollclient.o: pollclient.c $(TARGET_LIB)
+		$(CC) $(CC_FLAGS) -o pollclient.c ./$(TARGET_LIB) $(THREAD_FLAGS) -lm
+
+server.o: server.c $(TARGET_LIB)
+		$(CC) $(CC_FLAGS) -o server.c ./$(TARGET_LIB) $(THREAD_FLAGS) -lm
+
+client.o: client.c $(TARGET_LIB)
+		$(CC) $(CC_FLAGS) -o client.c ./$(TARGET_LIB) $(THREAD_FLAGS) -lm
 
 .PHONY: clean
 clean:
-	-${RM} ${TARGET_LIB} ${OBJS}
+	-${RM} *.o *.so testSingleton

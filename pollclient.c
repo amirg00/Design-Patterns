@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
     for (;;) {
         memset(buf, 0, sizeof(buf)); // clean buffer
         gets(buf); // get input string from client
-        send(sockfd, buf, strlen(buf), 0); // send data to server.
+        send(sockfd, buf, strlen(buf)); // send data to server.
         printf("client: sends '%s'\n", buf);
     }
 
