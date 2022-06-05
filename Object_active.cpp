@@ -25,7 +25,11 @@ void destroyAO(AO_ptr AO){
 void eventExecute(void* AO_input){
     AO_ptr AO = (AO_ptr) AO_input;
     for(;;){
-        if (isEmpty(AO->queue)){ // Queue is empty: skip
+        if (isEmpty(AO->queue)){    // Queue is empty: skip
+            continue;
+        }
+
+        if (AO->end_treat == NULL){ // end_threat is null: skip
             continue;
         }
         // Dequeue the latest event to handle.
