@@ -1,7 +1,8 @@
 #include "pipeline.h"
 
-int client_fd;            // Client's file descriptor.
-Deque* secondQ, thirdQ;   // global queues.
+int client_fd;  // Client's file descriptor.
+Deque* secondQ; // global queue.
+Deque* thirdQ;  // global queue.
 
 // Initializes pipe with active objects.
 // return the generated pipe with initialized AOs.
@@ -32,11 +33,11 @@ _PIPE_PTR create_pipe(int fd, Deque* inputsQ){
 }
 
 // Reads user's input from given socket of the server side.
- void read_user_input(void* sock_fd, void* queue){
+void read_user_input(void* args){
     // Set given values to their original type
-    int *current_fd = (int*) sock_fd;
-    int new_fd = *current_fd;
-    Deque *deque = (Deque*) queue;
+    ARGS *args1 = (ARGS*) args;
+    int new_fd = args1->fd;
+    Deque *deque = args1->deque;
 
     /**********************************/
     /*    READ STRINGS FROM SERVER    */
@@ -93,7 +94,7 @@ void alter_chars(void* user_in){
 // Sends the data back to the user/client.
 void send_data(void* user_in){
     char* str = (char*) user_in;
-    send(client_fd, str, strlen(str)); // sends data back to client.
+    send(client_fd, str, strlen(str), 0); // sends data back to client.
     printf("Data sent back to user: '%s'.\n", str);
 }
 

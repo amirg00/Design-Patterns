@@ -1,6 +1,8 @@
 #include "pthread.h"
 #include <poll.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #define F_NUM 50
 #define FD_NUM 100
@@ -16,4 +18,4 @@ typedef struct Reactor{
 void* newReactor();
 void InstallHandler(REACTOR_PTR, void* (*func_ptr)(void*), int fd);
 void RemoveHandler(REACTOR_PTR reactor_ptr, int fd);
-void listen_to_fds(REACTOR_PTR reactor_ptr);
+void listen_to_fds(void* reactor_ptr);

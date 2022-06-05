@@ -1,5 +1,9 @@
 #include "guard.hpp"
+#include "iostream"
+#include <unistd.h>
+#include "pthread.h"
 using namespace std;
+
 
 /**
  * Brief: this application test increases a global int variable.
@@ -12,7 +16,7 @@ pthread_mutex_t lock; // lock for the guard.
 int *global_num = (int*) malloc(sizeof(int)); // global int variable, which will be increased by threads.
 
 // Increases global int by 1.
-void update_global_var(){
+void* update_global_var(void*){
     guard guard{lock};
     (*global_num)++; //increase global by one.
     cout << "Variable's Current Value: " << *global_num << endl;
@@ -28,8 +32,8 @@ int main(){
         return 1;
     }
     pthread_t pthread_1, pthread_2;
-    pthread_create(&pthread_1, NULL,  update_global_var);
-    pthread_create(&pthread_2, NULL,  update_global_var);
+    pthread_create(&pthread_1, NULL,  update_global_var, NULL);
+    pthread_create(&pthread_2, NULL,  update_global_var, NULL);
     pthread_join(pthread_1, NULL);
     pthread_join(pthread_2, NULL);
     free(global_num);

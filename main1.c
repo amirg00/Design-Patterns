@@ -54,6 +54,13 @@ void *THREAD(void *input) {
 }
 
 int main() {
+    // in order to send multiple values with a thread.
+    typedef struct arg_struct{
+        int fd;
+        Deque *deque;
+    }ARGS;
+
+    ARGS *args;
     _PIPE_PTR pipe; // pipeline of the active objects.
 
     int sockfd, new_fd;  // listen on sock_fd, new connection on new_fd
@@ -137,12 +144,16 @@ int main() {
         //pthread_t is the data type used to uniquely identify a thread
         pthread_t new_thread;
         //The pthread_create() function is used to create a new thread, with attributes specified by attr, within a process
-        create_thread = pthread_create(&new_thread, NULL,  read_user_input, &new_fd, first_event_queue);
+        args = malloc(sizeof(ARGS));
+        args->deque = first_event_queue;
+        args->fd = new_fd;
+        create_thread = pthread_create(&new_thread, NULL,  read_user_input, (void*)args);
         if (create_thread != 0) {
             printf("Unable to create thread\n");
         }
-        pipe = create_pipe(new_fd, first_event_queue);;
+        pipe = create_pipe(new_fd, first_event_queue);
     }
+    free(args);
     destroyPipe(pipe); // free everything
     return 0;
 }

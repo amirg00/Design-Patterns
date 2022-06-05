@@ -13,6 +13,11 @@
 #define SERVER_IP "127.0.0.1"       /*The server ip is the localhost*/
 #define MAX_DATA_SIZE 4096          /*Max number of bytes we can get at once - buffer size*/
 
+ // in order to send multiple values with a thread.
+ typedef struct arg_struct{
+    int fd;
+    Deque *deque;
+}ARGS;
 
 typedef struct pipeline{
     AO_ptr first_AO;        /*Activate 'Caesar Cipher' in hist=1, for each input user enters*/
@@ -20,9 +25,9 @@ typedef struct pipeline{
     AO_ptr third_AO;        /*Returns an answer to the user*/
 }_PIPE, *_PIPE_PTR;
 
-_PIPE_PTR create_pipe();
+_PIPE_PTR create_pipe(int fd, Deque* inputsQ);
 
-[[noreturn]] void read_user_input(void* sock_fd, void* queue);
+void read_user_input(void* args);
 void caesar_cipher(void* user_in);
 void alter_chars(void* user_in);
 void send_data(void* user_in);

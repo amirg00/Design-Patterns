@@ -10,6 +10,6 @@ typedef struct ObjectActive{
 //*****************************/
 //========== Methods ==========/
 //*****************************/
-AO_ptr newAO(Deque* queue, void (*threat)(void*), void (*end_threat)());
+AO_ptr newAO(Deque* queue, void (*treat)(void*), void (*end_treat)(void*));
 void destroyAO(AO_ptr AO);
-void eventExecute(AO_ptr AO);
+void eventExecute(void* AO);

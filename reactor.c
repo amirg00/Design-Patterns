@@ -2,7 +2,7 @@
 
 void* newReactor(){
     REACTOR_PTR reactor = (REACTOR_PTR) malloc(sizeof(REACTOR));
-    reactor.fd_size = 0;
+    reactor->fd_size = 0;
     return reactor;
 }
 void InstallHandler(REACTOR_PTR reactor_ptr, void* (*func_ptr)(void*), int fd){
@@ -22,7 +22,7 @@ void InstallHandler(REACTOR_PTR reactor_ptr, void* (*func_ptr)(void*), int fd){
     // Add a new fd handler in the end of the fds array.
     int curr_fd_size = reactor_ptr->fd_size;
     reactor_ptr->fds[curr_fd_size].events = POLLIN; // Report ready to read on incoming connection
-    reactor_ptr->fds[curr_fd_size] = fd;
+    reactor_ptr->fds[curr_fd_size].fd = fd;
     reactor_ptr->func_ptr[curr_fd_size] = func_ptr;
     reactor_ptr->fd_size++;
 }
@@ -44,19 +44,16 @@ void listen_to_fds(void* reactor_ptr_input){
     REACTOR_PTR reactor_ptr = (REACTOR_PTR) reactor_ptr_input;
     for(;;){
         int poll_counter = poll(reactor_ptr->fds, FD_NUM, -1);
-        if (poll_count == -1) {
+        if (poll_counter == -1) {
             perror("Poll error!\n");
             exit(1);
         }
         // Goes over all fds check who changed,
         // then sends read data from the socket.
-        for (int fd = 0; fd < reactor_ptr->fd_size; i++){
+        for (int fd = 0; fd < reactor_ptr->fd_size; fd++){
             if(reactor_ptr->fds[fd].revents && POLLIN){
-                // read input and send it to the corresponding function.
-                char buffer[MAX_DATA];
-                int rc = read(sock, buffer, sizeof(buffer));
-                if (rc <= 0) perror("Error reading!\n");
-                reactor_ptr->func_ptr[fd](buffer);
+                // Send to the corresponding function.
+                reactor_ptr->func_ptr[fd](&(reactor_ptr->fds[fd].fd));
             }
         }
 
