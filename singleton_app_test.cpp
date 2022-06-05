@@ -1,5 +1,6 @@
 #include "iostream"
 #include "singleton.hpp"
+#include <assert.h>
 using namespace std;
 
 int main(){
@@ -11,4 +12,6 @@ int main(){
     singleton<FILE*> *single_1 = singleton<FILE*>::Instance();
     singleton<FILE*> *single_2 = singleton<FILE*>::Instance();
     cout << "First Singleton: " << single_1 << ", " << "Second Singleton: " << single_2 << endl;
+    assert(single_1 == single_2);
+    single_1->Destroy();
 }
