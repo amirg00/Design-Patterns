@@ -1,5 +1,5 @@
 /*
-** server.c -- a stream socket server demo
+* server.c -- a stream socket server demo
 */
 #include<stdio.h>
 #include<string.h>
@@ -54,6 +54,8 @@ void *THREAD(void *input) {
 }
 
 int main() {
+    _PIPE_PTR pipe; // pipeline of the active objects.
+
     int sockfd, new_fd;  // listen on sock_fd, new connection on new_fd
     struct addrinfo hints, *servinfo, *p;
     struct sockaddr_storage their_addr; // connector's address information
@@ -129,17 +131,18 @@ int main() {
 
         inet_ntop(their_addr.ss_family, get_in_addr((struct sockaddr *) &their_addr), s, sizeof s);
         printf("server: got connection from %s\n", s);
-        if (pthread_mutex_init(&lock, NULL) != 0) {
-            printf("\n mutex init failed\n");
-            return 1;
-        }
+
+        Deque *first_event_queue = createQ(); // inputs event queue
+
         //pthread_t is the data type used to uniquely identify a thread
         pthread_t new_thread;
         //The pthread_create() function is used to create a new thread, with attributes specified by attr, within a process
-        create_thread = pthread_create(&new_thread, NULL, THREAD, &new_fd);
+        create_thread = pthread_create(&new_thread, NULL,  read_user_input, &new_fd, first_event_queue);
         if (create_thread != 0) {
             printf("Unable to create thread\n");
         }
+        pipe = create_pipe(new_fd, first_event_queue);;
     }
+    destroyPipe(pipe); // free everything
     return 0;
 }
