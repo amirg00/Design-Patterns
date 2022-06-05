@@ -17,8 +17,9 @@
 
 #define PORT "9034"   // Port we're listening on
 
-REACTOR_PTR reactorPtr = newReactor(); // global reactor
+REACTOR_PTR reactorPtr = (REACTOR_PTR)newReactor(); // global reactor
 
+void* handle_new_connection(void* fd);
 
 // Get sockaddr, IPv4 or IPv6:
 void *get_in_addr(struct sockaddr *sa) {
@@ -77,36 +78,10 @@ int get_listener_socket(void) {
     return listener;
 }
 
-// Function handles new connection the listener got.
-// Function gets the listener's fd.
-void handle_new_connection(void* fd) {
-    int newfd;
-    int *listener_fd = (int*) fd;
-    int listener = *listener_fd;
-
-    addrlen = sizeof remoteaddr; // address
-    socklen_t addrlen;
-    char remoteIP[INET6_ADDRSTRLEN];
-
-    newfd = accept(listener, (struct sockaddr *) &remoteaddr, &addrlen);
-    if (newfd == -1) {
-        perror("accept\n");
-        return;
-    }
-    // Install receive function for regular clients
-    // since listener got a connection from regular client.
-    InstallHandler(reactorPtr, handle_recv, newfd);
-    printf("pollserver: new connection from %s on socket %d\n",
-           inet_ntop(remoteaddr.ss_family,
-                     get_in_addr((struct sockaddr *) &remoteaddr),
-                     remoteIP, INET6_ADDRSTRLEN),
-           newfd);
-
-}
 
 // Handles receive data for regular clients.
 // Function gets the file descriptor of the regular client.
-void handle_recv(void* fd){
+void* handle_recv(void* fd){
     int *regular_fd = (int*) fd;
     int regular_client = *regular_fd;
     char buf[256];    // Buffer for client data
@@ -140,6 +115,29 @@ void handle_recv(void* fd){
             }
         }
     }
+}
+
+// Function handles new connection the listener got.
+// Function gets the listener's fd.
+void* handle_new_connection(void* fd) {
+    int newfd;
+    int *listener_fd = (int*) fd;
+    int listener = *listener_fd;
+
+    struct sockaddr_storage remoteaddr; // Client address
+    socklen_t addrlen;
+    addrlen = sizeof remoteaddr; // address
+
+    newfd = accept(listener, (struct sockaddr *) &remoteaddr, &addrlen);
+    if (newfd == -1) {
+        perror("accept\n");
+        return NULL;
+    }
+    // Install receive function for regular clients
+    // since listener got a connection from regular client.
+    InstallHandler(reactorPtr, handle_recv, newfd);
+    printf("pollserver: new connection on socket %d.\n", newfd);
+
 }
 
 int main() {

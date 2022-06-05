@@ -1,3 +1,6 @@
+/**
+ * Credit to: https://stackoverflow.com/questions/11711920/how-to-implement-multithread-safe-singleton-in-c11-without-using-mutex
+ */
 #include "pthread.h"
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER; // lock for the singleton instance
 

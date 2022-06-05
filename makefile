@@ -42,23 +42,29 @@ guard.o: guard.cpp guard.hpp
 testSingleton: singleton_app_test.cpp $(TARGET_LIB)
 		$(CXX) $(CXX_FLAGS) -o testSingleton singleton_app_test.cpp ./$(TARGET_LIB) $(THREAD_FLAGS) -lm
 
-testGuard: guard_app_test.cpp $(TARGET_LIB)
-		$(CXX) $(CXX_FLAGS) -o testGuard guard_app_test.cpp ./$(TARGET_LIB) $(THREAD_FLAGS) -lm
+test_guard: guard_app_test.o guard.o
+	$(CXX) $(CXX_FLAGS) -o test_guard guard.o guard_app_test.o -lpthread
 
-main1.o: main1.cpp $(TARGET_LIB)
+guard_app_test.o: guard_app_test.cpp guard.hpp
+	$(CXX) $(CXX_FLAGS) -c guard_app_test.cpp
+
+test_reactor: reactor.o pollserver.o
+	$(CXX) $(CXX_FLAGS) -o test_reactor reactor.o pollserver.o -pthread
+
+main1.o: main1.cpp
 	$(CXX) $(CC_FLAGS) -c main1.cpp
 
-pollserver.o: pollserver.c $(TARGET_LIB)
-		$(CC) $(CC_FLAGS) -o pollserver.c ./$(TARGET_LIB) $(THREAD_FLAGS) -lm
+pollserver.o: pollserver.cpp
+		$(CXX)  $(CXX_FLAGS) -c pollserver.cpp
 
-pollclient.o: pollclient.c $(TARGET_LIB)
-		$(CC) $(CC_FLAGS) -o pollclient.c ./$(TARGET_LIB) $(THREAD_FLAGS) -lm
+pollclient.o: pollclient.cpp
+		$(CXX) $(CC_FLAGS) -c pollclient.cpp
 
-server.o: server.c $(TARGET_LIB)
-		$(CC) $(CC_FLAGS) -o server.c ./$(TARGET_LIB) $(THREAD_FLAGS) -lm
+server.o: server.cpp
+		$(CXX) $(CC_FLAGS) -c server.cpp
 
-client.o: client.c $(TARGET_LIB)
-		$(CC) $(CC_FLAGS) -o client.c ./$(TARGET_LIB) $(THREAD_FLAGS) -lm
+client.o: client.cpp
+		$(CXX) $(CC_FLAGS)  -c client.cpp
 
 .PHONY: clean
 clean:

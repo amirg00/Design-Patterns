@@ -33,7 +33,7 @@ _PIPE_PTR create_pipe(int fd, Deque* inputsQ){
 }
 
 // Reads user's input from given socket of the server side.
-void read_user_input(void* args){
+void* read_user_input(void* args){
     // Set given values to their original type
     ARGS *args1 = (ARGS*) args;
     int new_fd = args1->fd;

@@ -20,7 +20,7 @@ void* update_global_var(void*){
     guard guard{lock};
     (*global_num)++; //increase global by one.
     cout << "Variable's Current Value: " << *global_num << endl;
-    sleep(5);
+    sleep(10);
 }
 
 int main(){

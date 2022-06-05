@@ -9,7 +9,7 @@
 
 #define ALPHABETIC_AMOUNT 26        /*Alphabetic chars amount*/
 #define HIST 1                      /*Hist amount for the cipher: the amount of the shift*/
-#define PORT 3490                   /*The port which first AO will be connecting to*/
+#define PORT "3490"                 /*The port which first AO will be connecting to*/
 #define SERVER_IP "127.0.0.1"       /*The server ip is the localhost*/
 #define MAX_DATA_SIZE 4096          /*Max number of bytes we can get at once - buffer size*/
 
@@ -27,7 +27,7 @@ typedef struct pipeline{
 
 _PIPE_PTR create_pipe(int fd, Deque* inputsQ);
 
-void read_user_input(void* args);
+void* read_user_input(void* args);
 void caesar_cipher(void* user_in);
 void alter_chars(void* user_in);
 void send_data(void* user_in);
