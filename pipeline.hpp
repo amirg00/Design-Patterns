@@ -15,14 +15,17 @@
 
 
 typedef struct pipeline{
-    AO_ptr first_AO;        /*Reads an input in socket which is connected to server*/
-    AO_ptr second_AO;       /*Activate 'Caesar Cipher' in hist=1, for each input user enters*/
-    AO_ptr third_AO;        /*Convert lowercase chars to uppercase, and vice versa*/
-    AO_ptr forth_AO;        /*Returns an answer to the user*/
+    AO_ptr first_AO;        /*Activate 'Caesar Cipher' in hist=1, for each input user enters*/
+    AO_ptr second_AO;       /*Convert lowercase chars to uppercase, and vice versa*/
+    AO_ptr third_AO;        /*Returns an answer to the user*/
 }_PIPE, *_PIPE_PTR;
 
 _PIPE_PTR create_pipe();
-void read_user_input();
-void caesar_cipher(char* user_in);
-void alter_chars(char* user_in);
+
+[[noreturn]] void read_user_input(void* sock_fd, void* queue);
+void caesar_cipher(void* user_in);
+void alter_chars(void* user_in);
+void send_data(void* user_in);
+void enQ2(void* data);
+void enQ3(void* data);
 void destroyPipe(_PIPE_PTR pipeline);
