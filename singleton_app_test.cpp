@@ -1,6 +1,6 @@
 #include "iostream"
 #include "singleton.hpp"
-#include <assert.h>
+#include <cassert>
 using namespace std;
 
 int main(){
