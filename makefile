@@ -68,4 +68,4 @@ client.o: client.cpp
 
 .PHONY: clean
 clean:
-	-${RM} *.o *.so testSingleton
+	-${RM} *.o *.so testSingleton singleton_text.txt test_guard
