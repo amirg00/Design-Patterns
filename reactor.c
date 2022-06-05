@@ -1,4 +1,4 @@
-#include "reactor.hpp"
+#include "reactor.h"
 
 void* newReactor(){
     REACTOR_PTR reactor = (REACTOR_PTR) malloc(sizeof(REACTOR));

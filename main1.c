@@ -14,7 +14,7 @@
 #include <arpa/inet.h>
 #include <sys/wait.h>
 #include <signal.h>
-#include "pipeline.hpp"
+#include "pipeline.h"
 
 #define BACKLOG 10   // how many pending connections queue will hold
 pthread_mutex_t lock;

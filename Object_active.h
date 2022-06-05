@@ -1,4 +1,4 @@
-#include "Deque.hpp"
+#include "Deque.h"
 
 typedef struct ObjectActive{
     Deque* queue;

@@ -13,7 +13,7 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <poll.h>
-#include "reactor.hpp"
+#include "reactor.h"
 
 #define PORT "9034"   // Port we're listening on
 

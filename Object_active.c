@@ -1,4 +1,4 @@
-#include "Object_active.hpp"
+#include "Object_active.h"
 
 AO_ptr newAO(Deque* queue, void (*treat)(void*), void (*end_treat)(void*)){
     AO_ptr active_object = (AO_ptr) malloc(sizeof(AO));

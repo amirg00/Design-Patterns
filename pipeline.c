@@ -1,4 +1,4 @@
-#include "pipeline.hpp"
+#include "pipeline.h"
 
 int client_fd;            // Client's file descriptor.
 Deque* secondQ, thirdQ;   // global queues.

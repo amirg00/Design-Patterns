@@ -1,4 +1,4 @@
-#include "Deque.hpp"
+#include "Deque.h"
 pthread_mutex_t lock;
 pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 
