@@ -1,7 +1,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <iostream>
 #include <pthread.h>
 
 typedef struct NodeDeque{
@@ -23,7 +22,7 @@ Deque* createQ();
 void enQ(Deque* queue, void* data);
 void* DEQUEUE_TAIL(Deque* queue);  /*Original dequeue head*/
 void* deQ(Deque* queue);           /*Dequeue head*/
-bool isEmpty(Deque* stack);
+int isEmpty(Deque* stack);
 void destoryQ(Deque* queue);
 int size(Deque* queue);
 void print_queue(Deque* stack);

@@ -88,7 +88,7 @@ void* DEQUEUE_TAIL(Deque* queue){
 // Destroy stack: clears all the nodes and free the current queue
 void destoryQ(Deque* queue){
     pthread_mutex_lock(&lock);
-    while (queue->head != nullptr){
+    while (queue->head != NULL){
         deque_node_ptr curr = queue->head;
         queue->head = queue->head->next;
         free(curr);
@@ -102,7 +102,7 @@ int size(Deque* queue){
     return queue->size;
 }
 
-bool isEmpty(Deque* queue){
+int isEmpty(Deque* queue){
     return queue->size == 0;
 }
 
