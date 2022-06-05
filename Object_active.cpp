@@ -1,6 +1,6 @@
 #include "Object_active.hpp"
 
-AO_ptr newAO(Deque* queue, void (*treat)(void*), void (*end_treat)()){
+AO_ptr newAO(Deque* queue, void (*treat)(void*), void (*end_treat)(void*)){
     AO_ptr active_object = (AO_ptr) malloc(sizeof(AO));
 
     /*Fill Active Object's fields*/
@@ -25,14 +25,16 @@ void destroyAO(AO_ptr AO){
 void eventExecute(void* AO_input){
     AO_ptr AO = (AO_ptr) AO_input;
     for(;;){
-        if (isEmpty(AO->queue)){ // Queue is empty: execute end_threat function
-            end_treat();
+        if (isEmpty(AO->queue)){ // Queue is empty: skip
             continue;
         }
         // Dequeue the latest event to handle.
         // The event's data is sent to threat function.
+        // After threat is done, function calls end threat function
+        // on the data of the latest event - execute end_threat function.
         deque_node_ptr headEvent = deQ(AO->queue);
         AO->treat(headEvent->data);
+        AO->end_treat(headEvent->data);
     }
 }
 
